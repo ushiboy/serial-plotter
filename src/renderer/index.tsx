@@ -6,7 +6,7 @@ import { App } from './presentation/App';
 
 const { ipcClient } = window.API;
 
-(async function() {
+(async function () {
   const state = await ipcClient.loadState();
   ReactDOM.render(<App state={state} />, document.getElementById('app'));
 })();

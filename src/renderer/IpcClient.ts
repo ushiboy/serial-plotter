@@ -6,7 +6,7 @@ export type Unsubscriber = () => void;
 export type AppStateListener = (state: AppState) => void;
 
 export type IpcClientInterface = {
-  loadState: () => Promise<AppState>,
+  loadState: () => Promise<AppState>;
   subscribeState: (listener: AppStateListener) => Unsubscriber;
   greet: () => string;
 };
