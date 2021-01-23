@@ -2,6 +2,7 @@ import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import * as Keys from './main/ipc/const';
 import { initState } from './status';
+import { getComPorts } from './main/infrastructure/SerialConnection';
 // eslint-disable-next-line
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -14,6 +15,8 @@ const state = initState();
 
 ipcMain.handle(Keys.LOAD_APP_STATE, async () => {
   state.platform = process.platform;
+  const ports = await getComPorts();
+  state.serialPorts = ports;
   return state;
 });
 
