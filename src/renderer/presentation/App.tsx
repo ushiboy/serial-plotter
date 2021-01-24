@@ -1,7 +1,11 @@
 import React from 'react';
 import { AppState } from '../../status';
+import { IpcClientInterface } from '../IpcClient';
 
-export const App: React.FC<{ state: AppState }> = (props) => {
+export const App: React.FC<{
+  state: AppState;
+  ipcClient: IpcClientInterface;
+}> = (props) => {
   const { state } = props;
   const { serialPorts } = state;
 
@@ -31,10 +35,6 @@ export const App: React.FC<{ state: AppState }> = (props) => {
           </div>
         </div>
       </form>
-      <h1>💖 Hello World!</h1>
-      <p>Welcome to your Electron application.</p>
-      <p>{state.version}</p>
-      <p>{state.platform}</p>
     </div>
   );
 };

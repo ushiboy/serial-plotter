@@ -8,5 +8,8 @@ const { ipcClient } = window.API;
 
 (async function () {
   const state = await ipcClient.loadState();
-  ReactDOM.render(<App state={state} />, document.getElementById('app'));
+  ReactDOM.render(
+    <App state={state} ipcClient={ipcClient} />,
+    document.getElementById('app')
+  );
 })();

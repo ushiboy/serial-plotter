@@ -8,7 +8,7 @@ export type AppStateListener = (state: AppState) => void;
 export type IpcClientInterface = {
   loadState: () => Promise<AppState>;
   subscribeState: (listener: AppStateListener) => Unsubscriber;
-  greet: () => string;
+  dispatch: (action: string) => void;
 };
 
 export const IpcClient = (ipcRenderer: IpcRenderer): IpcClientInterface => {
@@ -25,8 +25,6 @@ export const IpcClient = (ipcRenderer: IpcRenderer): IpcClientInterface => {
         ipcRenderer.removeListener(Keys.CHANGE_APP_STATE, f);
       };
     },
-    greet(): string {
-      return 'test';
-    },
+    dispatch(action: string): void {},
   };
 };
