@@ -11,9 +11,24 @@ export const App: React.FC<{ state: AppState }> = (props) => {
   return (
     <div className="container">
       <form>
-        <div className="form-group">
-          <label>Serial port</label>
+        <div className="input-group">
           <select className="form-control">{options}</select>
+          <div className="input-group-append">
+            <button
+              className="btn btn-outline-primary"
+              type="button"
+              onClick={() => {}}
+            >
+              Connect
+            </button>
+            <button
+              className="btn btn-outline-primary"
+              type="button"
+              onClick={() => {}}
+            >
+              Disconnect
+            </button>
+          </div>
         </div>
       </form>
       <h1>💖 Hello World!</h1>
