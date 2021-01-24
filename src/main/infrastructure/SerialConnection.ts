@@ -1,4 +1,4 @@
-import * as SerialPort from 'serialport';
+import SerialPort from 'serialport';
 
 export async function getComPorts(): Promise<string[]> {
   const ports = await SerialPort.list();
