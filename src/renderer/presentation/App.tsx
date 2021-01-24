@@ -1,7 +1,11 @@
 import React from 'react';
 import { AppState } from '../../status';
+import { IpcClientInterface } from '../IpcClient';
 
-export const App: React.FC<{ state: AppState }> = (props) => {
+export const App: React.FC<{
+  state: AppState;
+  ipcClient: IpcClientInterface;
+}> = (props) => {
   const { state } = props;
   const { serialPorts } = state;
 
@@ -11,15 +15,26 @@ export const App: React.FC<{ state: AppState }> = (props) => {
   return (
     <div className="container">
       <form>
-        <div className="form-group">
-          <label>Serial port</label>
+        <div className="input-group">
           <select className="form-control">{options}</select>
+          <div className="input-group-append">
+            <button
+              className="btn btn-outline-primary"
+              type="button"
+              onClick={() => {}}
+            >
+              Connect
+            </button>
+            <button
+              className="btn btn-outline-primary"
+              type="button"
+              onClick={() => {}}
+            >
+              Disconnect
+            </button>
+          </div>
         </div>
       </form>
-      <h1>💖 Hello World!</h1>
-      <p>Welcome to your Electron application.</p>
-      <p>{state.version}</p>
-      <p>{state.platform}</p>
     </div>
   );
 };
