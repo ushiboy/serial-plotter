@@ -7,7 +7,7 @@ export const App: React.FC<{
   ipcClient: IpcClientInterface;
 }> = (props) => {
   const { state } = props;
-  const { serialPorts } = state;
+  const { serialPorts, connected } = state;
 
   const options = serialPorts.map((p) => {
     return <option key={p}>{p}</option>;
@@ -21,6 +21,7 @@ export const App: React.FC<{
             <button
               className="btn btn-outline-primary"
               type="button"
+              disabled={connected}
               onClick={() => {}}
             >
               Connect
@@ -28,6 +29,7 @@ export const App: React.FC<{
             <button
               className="btn btn-outline-primary"
               type="button"
+              disabled={!connected}
               onClick={() => {}}
             >
               Disconnect
