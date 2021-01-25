@@ -2,6 +2,7 @@ export type AppState = {
   version: string;
   platform: string;
   serialPorts: string[];
+  connected: boolean;
 };
 
 export const initState = (): AppState => {
@@ -9,5 +10,6 @@ export const initState = (): AppState => {
     version: '',
     platform: '',
     serialPorts: [],
+    connected: false
   };
 };
