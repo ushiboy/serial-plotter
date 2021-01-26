@@ -21,10 +21,8 @@ ipcMain.handle(Keys.LOAD_APP_STATE, async () => {
   return state;
 });
 ipcMain.on(Keys.DISPATCH_ACTION, async (event, action: AppAction) => {
-  const { type } = action;
-  console.log(type);
   const r = await serialUpdater(action, { connected: state.connected });
-  console.log(r);
+  event.reply(Keys.CHANGE_APP_STATE, { ...state, connected: r.connected });
 });
 
 const createWindow = (): void => {

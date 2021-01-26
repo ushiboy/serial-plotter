@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AppState } from '../../status';
 import { IpcClientInterface } from '../IpcClient';
 import { openSerial, closeSerial } from '../../module/Serial';
@@ -8,8 +8,18 @@ export const App: React.FC<{
   ipcClient: IpcClientInterface;
 }> = (props) => {
   const { state, ipcClient } = props;
-  const { serialPorts, connected } = state;
+  const { serialPorts } = state;
   const [selectedPort, setSelectedPort] = useState(serialPorts[0] || '');
+  const [connected, setConnected] = useState(state.connected);
+
+  useEffect(() => {
+    const unsubscribe = ipcClient.subscribeState((state: AppState): void => {
+      setConnected(state.connected);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const options = serialPorts.map((p) => {
     return <option key={p}>{p}</option>;
