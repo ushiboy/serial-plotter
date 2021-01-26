@@ -1,6 +1,7 @@
 import { IpcRendererEvent, IpcRenderer } from 'electron';
 import { AppState } from '../status';
 import * as Keys from '../main/ipc/const';
+import { AppAction } from '../module';
 
 export type Unsubscriber = () => void;
 export type AppStateListener = (state: AppState) => void;
@@ -8,7 +9,7 @@ export type AppStateListener = (state: AppState) => void;
 export type IpcClientInterface = {
   loadState: () => Promise<AppState>;
   subscribeState: (listener: AppStateListener) => Unsubscriber;
-  dispatch: (action: string) => void;
+  dispatch: (action: AppAction) => void;
 };
 
 export const IpcClient = (ipcRenderer: IpcRenderer): IpcClientInterface => {
@@ -25,6 +26,8 @@ export const IpcClient = (ipcRenderer: IpcRenderer): IpcClientInterface => {
         ipcRenderer.removeListener(Keys.CHANGE_APP_STATE, f);
       };
     },
-    dispatch(action: string): void {},
+    dispatch(action: AppAction): void {
+      ipcRenderer.send(Keys.DISPATCH_ACTION, action);
+    },
   };
 };
