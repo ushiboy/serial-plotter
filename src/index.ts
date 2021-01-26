@@ -3,6 +3,8 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import * as Keys from './main/ipc/const';
 import { initState } from './status';
 import { getComPorts } from './main/infrastructure/SerialConnection';
+import { AppAction } from './module';
+import { serialUpdater } from './module/Serial';
 // eslint-disable-next-line
 declare const MAIN_WINDOW_WEBPACK_ENTRY: any;
 
@@ -14,10 +16,13 @@ if (require('electron-squirrel-startup')) {
 const state = initState();
 
 ipcMain.handle(Keys.LOAD_APP_STATE, async () => {
-  state.platform = process.platform;
   const ports = await getComPorts();
   state.serialPorts = ports;
   return state;
+});
+ipcMain.on(Keys.DISPATCH_ACTION, async (event, action: AppAction) => {
+  const r = await serialUpdater(action, { connected: state.connected });
+  event.reply(Keys.CHANGE_APP_STATE, { ...state, connected: r.connected });
 });
 
 const createWindow = (): void => {
