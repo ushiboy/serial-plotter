@@ -11,7 +11,7 @@ export type Unsubscribe = () => void;
 export interface Connection {
   isOpen(): boolean;
 
-  open(): Promise<void>;
+  open(port: string): Promise<void>;
 
   subscribe(subscriber: Subscriber): Unsubscribe;
 
@@ -19,17 +19,21 @@ export interface Connection {
 }
 
 export class SerialConnection implements Connection {
-  private serialPort: SerialPort;
+  private serialPort: SerialPort | null;
 
-  constructor(serialPort: SerialPort) {
-    this.serialPort = serialPort;
+  constructor() {
+    this.serialPort = null;
   }
 
   isOpen(): boolean {
-    return this.serialPort.isOpen;
+    return this.serialPort?.isOpen;
   }
 
-  open(): Promise<void> {
+  open(port: string): Promise<void> {
+    this.serialPort = new SerialPort(port, {
+      baudRate: 115200,
+      autoOpen: false,
+    });
     return new Promise((resolve, reject) => {
       this.serialPort.open((err) => {
         if (err) {
@@ -42,6 +46,9 @@ export class SerialConnection implements Connection {
   }
 
   subscribe(subscriber: Subscriber): Unsubscribe {
+    if (this.serialPort === null) {
+      throw new Error('SerialPort does not open');
+    }
     this.serialPort.on('data', subscriber);
     return (): void => {
       this.serialPort.off('data', subscriber);
@@ -49,6 +56,9 @@ export class SerialConnection implements Connection {
   }
 
   close(): Promise<void> {
+    if (this.serialPort === null) {
+      throw new Error('SerialPort does not open');
+    }
     return new Promise((resolve, reject) => {
       this.serialPort.close((err) => {
         if (err) {
@@ -56,15 +66,8 @@ export class SerialConnection implements Connection {
           return;
         }
         resolve();
+        this.serialPort = null;
       });
     });
-  }
-
-  static create(port: string): SerialConnection {
-    return new SerialConnection(
-      new SerialPort(port, {
-        baudRate: 115200,
-      })
-    );
   }
 }
