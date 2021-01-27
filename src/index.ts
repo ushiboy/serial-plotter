@@ -17,7 +17,11 @@ if (require('electron-squirrel-startup')) {
 }
 
 const state = initState();
-const serialConnection = new SerialConnection();
+const serialConnection = new SerialConnection([
+  (buffer: Buffer): void => {
+    console.log(buffer);
+  },
+]);
 
 ipcMain.handle(Keys.LOAD_APP_STATE, async () => {
   const ports = await getComPorts();
