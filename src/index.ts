@@ -25,7 +25,11 @@ ipcMain.handle(Keys.LOAD_APP_STATE, async () => {
   return state;
 });
 ipcMain.on(Keys.DISPATCH_ACTION, async (event, action: AppAction) => {
-  const r = await serialUpdater(action, { connected: state.connected });
+  const r = await serialUpdater(
+    action,
+    { connected: state.connected },
+    serialConnection
+  );
   event.reply(Keys.CHANGE_APP_STATE, { ...state, connected: r.connected });
 });
 

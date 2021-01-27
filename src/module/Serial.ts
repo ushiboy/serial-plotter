@@ -1,3 +1,5 @@
+import { Connection } from '../main/infrastructure/SerialConnection';
+
 const OPEN_SERIAL = 'open@serial';
 const CLOSE_SERIAL = 'close@serial';
 
@@ -41,15 +43,21 @@ export const serialInit = (): SerialModel => {
 
 export const serialUpdater = async (
   action: SerialAction,
-  model: SerialModel
+  model: SerialModel,
+  serialConnection: Connection
 ): Promise<SerialModel> => {
   switch (action.type) {
     case OPEN_SERIAL: {
       const { payload } = action;
-      console.log(payload);
-      return { ...model, connected: true };
+      try {
+        await serialConnection.open(payload.port);
+        return { ...model, connected: serialConnection.isOpen() };
+      } catch (e) {
+        return { ...model, connected: false };
+      }
     }
     case CLOSE_SERIAL:
+      await serialConnection.close();
       return { ...model, connected: false };
   }
   return model;

@@ -32,6 +32,7 @@ export class SerialConnection implements Connection {
   open(port: string): Promise<void> {
     this.serialPort = new SerialPort(port, {
       baudRate: 115200,
+      autoOpen: false,
     });
     return new Promise((resolve, reject) => {
       this.serialPort.open((err) => {
