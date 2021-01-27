@@ -20,9 +20,11 @@ export interface Connection {
 
 export class SerialConnection implements Connection {
   private serialPort: SerialPort | null;
+  private subscribers: Subscriber[];
 
-  constructor() {
+  constructor(subscribers: Subscriber[] = []) {
     this.serialPort = null;
+    this.subscribers = subscribers;
   }
 
   isOpen(): boolean {
@@ -33,6 +35,9 @@ export class SerialConnection implements Connection {
     this.serialPort = new SerialPort(port, {
       baudRate: 115200,
       autoOpen: false,
+    });
+    this.subscribers.forEach((f) => {
+      this.serialPort.on('data', f);
     });
     return new Promise((resolve, reject) => {
       this.serialPort.open((err) => {
@@ -59,6 +64,9 @@ export class SerialConnection implements Connection {
     if (this.serialPort === null) {
       throw new Error('SerialPort does not open');
     }
+    this.subscribers.forEach((f) => {
+      this.serialPort.off('data', f);
+    });
     return new Promise((resolve, reject) => {
       this.serialPort.close((err) => {
         if (err) {
