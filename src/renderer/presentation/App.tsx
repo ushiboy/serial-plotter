@@ -31,6 +31,7 @@ export const App: React.FC<{
           <select
             className="form-control"
             value={selectedPort}
+            disabled={connected}
             onChange={(e) => {
               setSelectedPort(e.target.value);
             }}
@@ -59,6 +60,9 @@ export const App: React.FC<{
               Disconnect
             </button>
           </div>
+        </div>
+        <div className="input-group">
+          <textarea className="form-control" style={{ height: 300 }}></textarea>
         </div>
       </form>
     </div>
